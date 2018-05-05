@@ -1,3 +1,6 @@
+WIP
+w/ Sean Raspet for 7x7
+
 - Financial research: <https://docs.google.com/document/d/11PY37_3irp1vH6WQRmaKuNPv9TWaHfL7phrNYacmU_k/edit?ts=5ae92ef1>
 - Beef statistics: <https://docs.google.com/document/d/1WZj21UNqVyMim3ujwawqWjnAlJsbaPM4IHTxmPMUMqM/edit?ts=5ae92e52>
 - Tarek notes: <https://docs.google.com/document/d/115PvNuksFuKIpS527cN3BvcafANMIcOG7TfAyf1-UIk/edit?ts=5ae930f1>
