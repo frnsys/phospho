@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins')
+
+html, body
+  margin: 0
+  padding: 0
+  font-family: 'Poppins', sans-serif
+  overflow: hidden
+
+h1
+  text-align: center
+  margin: 0
+  padding: 0.5em 0 0.4em 0
+  font-size: 1.2em
+
+#basket h1
+  background: #ffdede
+  border-bottom: 2px solid #ffa0a0
+
+#trader h1
+  color: #fff
+  background: #42b642
+  border-bottom: 2px solid #248c2f
+
+.grid
+  max-width: 720px
+  margin: 0 auto
+  display: grid
+  padding: 0
+  list-style: none
+  grid-template-columns: repeat(auto-fit, 33.33%)
+  li
+    grid-row: span 1
+    grid-column: span 1
+    position: relative
+    padding: 1em
+    cursor: pointer
+    &:hover
+      background: #5757f4
+
+.price
+  background: #222
+  color: #fff
+  padding: 0.2em 0.5em
+  display: inline-block
+  border-radius: 0.2em
+  position: absolute
+  bottom: 1em
+  right: 1em
+
+#trader-main
+  max-width: 480px
+  margin: 0 auto
+  background: #303030
+  color: #fff
+  padding: 1em
+
+.button
+  padding: 0.3em 1em
+  text-align: center
+  border: 1px solid rgba(255,255,255,0.3)
+  font-size: 1.5em
+  cursor: pointer
+  &:hover
+    background: rgba(0,0,0,0.1)
+
+.bidder
+  width: 8em
+  display: inline-block
+  h2
+    text-align: center
+  .button
+    background: rgba(0,0,0,0.2)
+    border: 1px solid rgba(0,0,0,0.2)
+    &:hover
+      background: rgba(0,0,0,0.4)
+  .button-increment
+    border-radius: 0.25em 0.25em 0 0
+  .button-decrement
+    border-radius: 0 0 0.25em 0.25em
+  .buy-button
+    border-radius: 0.25em
+    background: #42b642
+    text-align: center
+    color: #fff
+    border: 2px solid #248c2f
+    &:hover
+      background: #248c2f
+
+.trader-trading
+  display: flex
+  justify-content: space-between
+  margin-top: 2em
+  .trader-section
+    margin: 1.5em 0 0 0
+    &:first-child
+      margin-top: 0
+  .trader-shares-title
+    margin: 0
+    font-size: 1em
+    color: rgb(125, 125, 125)
+    text-align: right
+    font-weight: normal
+  .trader-shares
+    text-align: right
+    font-size: 2em
+    margin: 0

@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="basket">
+    <h1>Food Mart</h1>
+    <ul class="grid">
+        <li data-model="/static/models/beef.gltf">
+            <div class="price">$10/lbs</div>
+        </li>
+        <li data-model="/static/models/orange.gltf">
+            <div class="price">$1.17/lbs</div>
+        </li>
+        <li data-model="/static/models/milk.gltf">
+            <div class="price">$4.25/gal</div>
+        </li>
+        <li data-model="/static/models/pet_food.gltf">
+            <div class="price">$2.25/oz</div>
+        </li>
+        <li data-model="/static/models/bread.gltf" data-scale="100">
+            <div class="price">$1.59/loaf</div>
+        </li>
+        <li data-model="/static/models/peas.gltf">
+            <div class="price">$0.99/oz</div>
+        </li>
+    </ul>
+</div>
+{{ javascript_tag('basket_js') | safe }}
+{% endblock %}
+

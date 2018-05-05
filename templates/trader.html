@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="trader">
+<h1>CapFydent</h1>
+<div id="trader-main"></div>
+</div>
+{{ javascript_tag('trader_js') | safe }}
+{% endblock %}
+
+
