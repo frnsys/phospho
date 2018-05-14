@@ -18,6 +18,7 @@ module.exports = {
   entry: {
     basket_js: './static/js/basket.js',
     trader_js: './static/js/trader.js',
+    plant_js: './static/js/plant.js',
     main_css: './static/style.sass'
   },
   output: {

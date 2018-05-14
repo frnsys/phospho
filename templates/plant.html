@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="plant">
+    <ul class="statuses">
+        <li id="phosphorus"><div class="fill"></div></li>
+        <li id="hydration"><div class="fill"></div></li>
+    </ul>
+    <div id="plant-model" data-model="/static/models/pot.gltf"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+{{ javascript_tag('plant_js') | safe }}
+{% endblock %}
+
+

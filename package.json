@@ -8,6 +8,7 @@
     "flask-server": "FLASK_APP=app.py FLASK_DEBUG=1 flask run"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^17.2.0",
     "chart.js": "^2.7.2",
     "react": "^16.2.0",
     "react-chartjs-2": "^2.7.2",
