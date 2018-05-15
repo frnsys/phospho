@@ -13,13 +13,19 @@ class Scene {
     opts.height = opts.height || window.innerHeight;
     this.opts = opts;
 
-    this.scene = new Physijs.Scene();
-    this.scene.setGravity(new THREE.Vector3(0, -1000, 0));
+
+    this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer({antialias: false, alpha: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(opts.width, opts.height);
     this.renderer.setClearColor(0xeeeeee, 0);
     document.body.appendChild(this.renderer.domElement);
+
+    this.clock = new THREE.Clock();
+    this.world = new CANNON.World();
+    this.world.gravity.set(0,-9.82, 0);
+    this.world.broadphase = new CANNON.NaiveBroadphase();
+    this.world.solver.iterations = 10;
 
     // this.camera = new THREE.PerspectiveCamera(
     //   VIEW_ANGLE,
@@ -29,8 +35,11 @@ class Scene {
     let aspect = opts.width/opts.height;
     this.camera = new THREE.OrthographicCamera(-D*aspect, D*aspect, D, -D, NEAR, FAR);
     window.cam = this.camera;
-    this.camera.zoom = 0.00095;
-    this.camera.position.y = -50;
+    // this.camera.zoom = 0.00095;
+    // this.camera.position.y = -50;
+    // this.camera.position.z = 400;
+    this.camera.zoom = 0.05;
+    // this.camera.position.y = -50;
     this.camera.position.z = 400;
     this.camera.updateProjectionMatrix();
 
@@ -57,7 +66,8 @@ class Scene {
   }
 
   render() {
-    this.scene.simulate()
+    let delta = this.clock.getDelta();
+    this.world.step(delta);
     this.renderer.render(this.scene, this.camera);
   }
 }
