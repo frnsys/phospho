@@ -17,10 +17,9 @@ function makeWall(pos, rot) {
 class Collection {
   constructor() {
     this.scene = new Scene({
-      enableControls: true
+      enableControls: false
     });
     this.objs = [];
-    this.phys = {};
     this.loaded = {};
 
     // setup box
@@ -46,9 +45,66 @@ class Collection {
 
     // TESTING spawn random models
     let models = ['plant', 'water_drop', 'beef', 'milk', 'bread', 'orange', 'pet_food', 'peas'];
-    for (let i=0; i<100; i++) {
+    for (let i=0; i<20; i++) {
       let model = models[Math.floor(Math.random() * models.length - 1)];
       this.loadModel(`/static/models/${model}.gltf`, {x: 10, y: 10, z: 10});
+    }
+
+    this.selected = null;
+    this.mouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
+    this.scene.renderer.domElement.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+    this.scene.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    this.scene.renderer.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+    this.scene.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+  }
+
+  updateMouse(ev) {
+    // adjust browser mouse position for three.js scene
+    this.mouse.x = (ev.clientX/this.scene.renderer.domElement.clientWidth) * 2 - 1;
+    this.mouse.y = -(ev.clientY/this.scene.renderer.domElement.clientHeight) * 2 + 1;
+  }
+
+  onTouchStart(ev) {
+    ev.preventDefault();
+    ev.clientX = ev.touches[0].clientX;
+    ev.clientY = ev.touches[0].clientY;
+    this.onMouseDown(ev);
+  }
+
+  onMouseDown(ev) {
+    ev.preventDefault();
+    this.updateMouse(ev);
+    this.raycaster.setFromCamera(this.mouse, this.scene.camera);
+
+    var intersects = this.raycaster.intersectObjects(this.objs);
+    if (intersects.length > 0) {
+      var obj = intersects[0].object,
+          pos = intersects[0].point;
+      this.selected = obj;
+      this.selected.body.mass = 0;
+      this.selected.body.velocity.set(0,0,0);
+    }
+  }
+
+  onMouseUp(ev) {
+    ev.preventDefault();
+    if (this.selected) {
+      this.selected.body.mass = OBJ_MASS;
+      this.selected = null;
+    }
+  }
+
+  onMouseMove(ev) {
+    if (this.selected) {
+      this.updateMouse(ev);
+      this.raycaster.setFromCamera(this.mouse, this.scene.camera);
+      var pos = this.raycaster.ray.origin;
+      this.selected.position.x = pos.x;
+      this.selected.position.y = pos.y;
+      this.selected.body.position.x = pos.x;
+      this.selected.body.position.y = pos.y;
+      this.selected.body.velocity.set(0,0,0);
     }
   }
 
@@ -92,7 +148,7 @@ class Collection {
     // this.scene.add(shapeMesh);
 
     this.objs.push(model);
-    this.phys[model.uuid] = body;
+    model.body = body;
   }
 
   loadModel(path, pos) {
@@ -115,9 +171,8 @@ plant_el.appendChild(plant.scene.renderer.domElement);
 function render(time) {
   plant.scene.render();
   plant.objs.forEach((obj) => {
-    let physbox = plant.phys[obj.uuid];
-    obj.position.copy(physbox.position);
-    obj.quaternion.copy(physbox.quaternion);
+    obj.position.copy(obj.body.position);
+    obj.quaternion.copy(obj.body.quaternion);
   });
   requestAnimationFrame(render);
 }
