@@ -17,12 +17,12 @@ def new_game():
     if id is None:
         id = uuid.uuid4().hex
         session['id'] = id
-    return redirect(url_for('plant', id=id))
+    return redirect(url_for('main', id=id))
 
 
-@app.route('/plant/<id>')
-def plant(id):
-    return render_template('plant.html')
+@app.route('/<id>')
+def main(id):
+    return render_template('main.html')
 
 
 @app.route('/basket')
