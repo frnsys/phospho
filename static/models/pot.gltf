@@ -1,0 +1,168 @@
+{
+    "accessors" : [
+        {
+            "bufferView" : 0, 
+            "componentType" : 5123, 
+            "count" : 804, 
+            "max" : [
+                495
+            ], 
+            "min" : [
+                0
+            ], 
+            "type" : "SCALAR"
+        }, 
+        {
+            "bufferView" : 1, 
+            "componentType" : 5126, 
+            "count" : 496, 
+            "max" : [
+                0.858104407787323, 
+                0.7896585464477539, 
+                0.8581043481826782
+            ], 
+            "min" : [
+                -0.8581042885780334, 
+                -0.47016048431396484, 
+                -0.8581043481826782
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 2, 
+            "componentType" : 5126, 
+            "count" : 496, 
+            "max" : [
+                0.9807853102684021, 
+                1.0, 
+                0.9807854294776917
+            ], 
+            "min" : [
+                -0.9807853698730469, 
+                -1.0, 
+                -0.9807853698730469
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 3, 
+            "componentType" : 5126, 
+            "count" : 496, 
+            "max" : [
+                0.6420434713363647, 
+                0.6420435011386871
+            ], 
+            "min" : [
+                0.35795649886131287, 
+                0.35795652866363525
+            ], 
+            "type" : "VEC2"
+        }
+    ], 
+    "asset" : {
+        "generator" : "Khronos Blender glTF 2.0 exporter", 
+        "version" : "2.0"
+    }, 
+    "bufferViews" : [
+        {
+            "buffer" : 0, 
+            "byteLength" : 1608, 
+            "byteOffset" : 0, 
+            "target" : 34963
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 5952, 
+            "byteOffset" : 1608, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 5952, 
+            "byteOffset" : 7560, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 3968, 
+            "byteOffset" : 13512, 
+            "target" : 34962
+        }
+    ], 
+    "buffers" : [
+        {
+            "byteLength" : 17480, 
+            "uri" : "pot.bin"
+        }
+    ], 
+    "extensionsUsed" : [
+        "KHR_materials_unlit"
+    ], 
+    "images" : [
+        {
+            "name" : "pot", 
+            "uri" : "pot.jpg"
+        }
+    ], 
+    "materials" : [
+        {
+            "extensions" : {
+                "KHR_materials_unlit" : {}
+            }, 
+            "name" : "Pot", 
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6400000190734865, 
+                    0.6400000190734865, 
+                    0.6400000190734865, 
+                    1.0
+                ], 
+                "baseColorTexture" : {
+                    "index" : 0
+                }, 
+                "metallicFactor" : 0.0, 
+                "roughnessFactor" : 0.9
+            }
+        }
+    ], 
+    "meshes" : [
+        {
+            "name" : "Cylinder.002", 
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "NORMAL" : 2, 
+                        "POSITION" : 1, 
+                        "TEXCOORD_0" : 3
+                    }, 
+                    "indices" : 0, 
+                    "material" : 0
+                }
+            ]
+        }
+    ], 
+    "nodes" : [
+        {
+            "mesh" : 0, 
+            "name" : "Pot"
+        }
+    ], 
+    "samplers" : [
+        {}
+    ], 
+    "scene" : 0, 
+    "scenes" : [
+        {
+            "name" : "Scene", 
+            "nodes" : [
+                0
+            ]
+        }
+    ], 
+    "textures" : [
+        {
+            "sampler" : 0, 
+            "source" : 0
+        }
+    ]
+}

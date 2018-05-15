@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="plant">
+    <div id="plant-model"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.js"></script>
+<script src="/static/lib/physijs/physi.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+{{ javascript_tag('plant_js') | safe }}
+{% endblock %}
+
+

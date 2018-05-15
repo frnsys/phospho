@@ -1,0 +1,198 @@
+{
+    "accessors" : [
+        {
+            "bufferView" : 0, 
+            "componentType" : 5121, 
+            "count" : 60, 
+            "max" : [
+                59
+            ], 
+            "min" : [
+                0
+            ], 
+            "type" : "SCALAR"
+        }, 
+        {
+            "bufferView" : 1, 
+            "componentType" : 5126, 
+            "count" : 60, 
+            "max" : [
+                0.8944246768951416, 
+                2.0406811237335205, 
+                0.8506399989128113
+            ], 
+            "min" : [
+                -0.8944252729415894, 
+                -1.354073166847229, 
+                -0.8506399989128113
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 2, 
+            "componentType" : 5126, 
+            "count" : 60, 
+            "max" : [
+                0.9822461009025574, 
+                0.348283052444458, 
+                0.9341715574264526
+            ], 
+            "min" : [
+                -0.9822461009025574, 
+                -0.7946524024009705, 
+                -0.9341715574264526
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 3, 
+            "componentType" : 5126, 
+            "count" : 60, 
+            "max" : [
+                0.931755542755127, 
+                0.8918026685714722, 
+                0.9996840357780457, 
+                1.0
+            ], 
+            "min" : [
+                -0.9490566253662109, 
+                -0.7649242877960205, 
+                -0.9888027906417847, 
+                -1.0
+            ], 
+            "type" : "VEC4"
+        }, 
+        {
+            "bufferView" : 4, 
+            "componentType" : 5126, 
+            "count" : 60, 
+            "max" : [
+                0.7770140767097473, 
+                0.8532808870077133
+            ], 
+            "min" : [
+                0.15754681825637817, 
+                0.12442523241043091
+            ], 
+            "type" : "VEC2"
+        }
+    ], 
+    "asset" : {
+        "generator" : "Khronos Blender glTF 2.0 exporter", 
+        "version" : "2.0"
+    }, 
+    "bufferViews" : [
+        {
+            "buffer" : 0, 
+            "byteLength" : 60, 
+            "byteOffset" : 0, 
+            "target" : 34963
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 720, 
+            "byteOffset" : 60, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 720, 
+            "byteOffset" : 780, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 960, 
+            "byteOffset" : 1500, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 480, 
+            "byteOffset" : 2460, 
+            "target" : 34962
+        }
+    ], 
+    "buffers" : [
+        {
+            "byteLength" : 2940, 
+            "uri" : "water_drop.bin"
+        }
+    ], 
+    "extensionsUsed" : [
+        "KHR_materials_unlit"
+    ], 
+    "images" : [
+        {
+            "name" : "water_drop", 
+            "uri" : "water_drop.jpg"
+        }
+    ], 
+    "materials" : [
+        {
+            "extensions" : {
+                "KHR_materials_unlit" : {}
+            }, 
+            "name" : "WaterDrop", 
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.04277094358606881, 
+                    0.187211368737783, 
+                    0.3981395838981463, 
+                    1.0
+                ], 
+                "baseColorTexture" : {
+                    "index" : 0
+                }, 
+                "metallicFactor" : 0.0, 
+                "roughnessFactor" : 0.9
+            }
+        }
+    ], 
+    "meshes" : [
+        {
+            "name" : "Icosphere.001", 
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "NORMAL" : 2, 
+                        "POSITION" : 1, 
+                        "TANGENT" : 3, 
+                        "TEXCOORD_0" : 4
+                    }, 
+                    "indices" : 0, 
+                    "material" : 0
+                }
+            ]
+        }
+    ], 
+    "nodes" : [
+        {
+            "mesh" : 0, 
+            "name" : "Icosphere", 
+            "translation" : [
+                3.2531946203562256e-07, 
+                0.0, 
+                2.3573873964011227e-09
+            ]
+        }
+    ], 
+    "samplers" : [
+        {}
+    ], 
+    "scene" : 0, 
+    "scenes" : [
+        {
+            "name" : "Scene", 
+            "nodes" : [
+                0
+            ]
+        }
+    ], 
+    "textures" : [
+        {
+            "sampler" : 0, 
+            "source" : 0
+        }
+    ]
+}
