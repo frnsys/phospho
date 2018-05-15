@@ -2,7 +2,7 @@ import Scene from './scene.js';
 import GLTFLoader from './gltf.js';
 
 const OBJ_MASS = 10;
-const MOUSE_VEL_SCALE = 2000;
+const MOUSE_VEL_SCALE = 3000;
 const SPHERE_POS = {x: 0, y: 0, z: -10};
 const SPHERE_RAD = 2;
 const loader = new GLTFLoader();
@@ -241,6 +241,7 @@ plant_el.appendChild(plant.scene.renderer.domElement);
 function render(time) {
   plant.scene.render();
   plant.objs.forEach((obj) => {
+    obj.body.position.z = 0;
     obj.position.copy(obj.body.position);
     obj.quaternion.copy(obj.body.quaternion);
   });
