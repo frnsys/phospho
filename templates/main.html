@@ -2,11 +2,12 @@
 
 {% block content %}
 <div id="plant">
+    <div id="selected-name"></div>
     <div id="plant-model"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
-{{ javascript_tag('plant_js') | safe }}
+{{ javascript_tag('main_js') | safe }}
 {% endblock %}
 
 

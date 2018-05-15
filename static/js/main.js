@@ -2,6 +2,9 @@ import Scene from './scene.js';
 import GLTFLoader from './gltf.js';
 
 const OBJ_MASS = 10;
+const MOUSE_VEL_SCALE = 2000;
+const SPHERE_POS = {x: 0, y: 0, z: -10};
+const SPHERE_RAD = 2;
 const loader = new GLTFLoader();
 
 function makeWall(pos, rot) {
@@ -47,16 +50,24 @@ class Collection {
     let models = ['plant', 'water_drop', 'beef', 'milk', 'bread', 'orange', 'pet_food', 'peas'];
     for (let i=0; i<20; i++) {
       let model = models[Math.floor(Math.random() * models.length - 1)];
-      this.loadModel(`/static/models/${model}.gltf`, {x: 10, y: 10, z: 10});
+      this.loadModel(`/static/models/${model}.gltf`, {x: 10, y: 10, z: 0});
     }
 
     this.selected = null;
+    this.focused = null;
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+    this.mouseVels = [];
     this.scene.renderer.domElement.addEventListener('mouseup', this.onMouseUp.bind(this), false);
     this.scene.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     this.scene.renderer.domElement.addEventListener('touchstart', this.onTouchStart.bind(this), false);
     this.scene.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+
+    let sphereGeo = new THREE.SphereBufferGeometry(SPHERE_RAD);
+    let sphereMat = new THREE.MeshBasicMaterial({color: 0xffffff, opacity: 0.2});
+    let sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    sphere.position.copy(SPHERE_POS);
+    this.scene.add(sphere);
   }
 
   updateMouse(ev) {
@@ -84,20 +95,64 @@ class Collection {
       this.selected = obj;
       this.selected.body.mass = 0;
       this.selected.body.velocity.set(0,0,0);
+
+      // clicking focused object
+      if (this.selected == this.focused) {
+        // eh sort of buggy but ok
+        this.selected.scale.set(1.0, 1.0, 1.0);
+        this.selected.scale.set(1.2, 1.2, 1.2);
+        setTimeout(() => {
+          this.selected.scale.set(1, 1, 1);
+        }, 500);
+
+        // roughly every 10 clicks
+        if (Math.random() < 0.10) {
+          if (Math.random() < 0.5) {
+            this.loadModel(`/static/models/orange.gltf`, SPHERE_POS);
+          } else {
+            this.loadModel(`/static/models/beef.gltf`, SPHERE_POS);
+          }
+        }
+      }
     }
   }
 
   onMouseUp(ev) {
     ev.preventDefault();
     if (this.selected) {
+      if (this.selected != this.focused) {
+        let vel = this.mouseVels[0];
+        if (vel) {
+          this.selected.body.velocity.set(vel.x*MOUSE_VEL_SCALE, vel.y*MOUSE_VEL_SCALE, 0);
+        }
+      }
       this.selected.body.mass = OBJ_MASS;
       this.selected = null;
+    }
+    if (this.focused) {
+      this.focused.body.mass = 0;
+      this.focused.position.x = SPHERE_POS.x;
+      this.focused.position.y = SPHERE_POS.y;
+      this.focused.body.position.x = SPHERE_POS.x;
+      this.focused.body.position.y = SPHERE_POS.y;
     }
   }
 
   onMouseMove(ev) {
+    let dt, lastMousePos;
+    if (this.lastMouseMove) {
+      let now = Date.now();
+      dt =  now - this.lastMouseMove;
+      lastMousePos = this.mouse.clone();
+    }
+    this.lastMouseMove = Date.now();
+    this.updateMouse(ev);
+    if (dt) {
+      let xVel = (this.mouse.x - lastMousePos.x)/dt;
+      let yVel = (this.mouse.y - lastMousePos.y)/dt;
+      this.mouseVels = [{x: xVel, y: yVel}];
+    }
     if (this.selected) {
-      this.updateMouse(ev);
       this.raycaster.setFromCamera(this.mouse, this.scene.camera);
       var pos = this.raycaster.ray.origin;
       this.selected.position.x = pos.x;
@@ -105,6 +160,18 @@ class Collection {
       this.selected.body.position.x = pos.x;
       this.selected.body.position.y = pos.y;
       this.selected.body.velocity.set(0,0,0);
+
+      // setting the "focused" item
+      if ((pos.x-SPHERE_POS.x)**2 + (pos.y-SPHERE_POS.y)**2 < SPHERE_RAD**2) {
+        if (!this.focused) {
+          this.focused = this.selected;
+          document.getElementById('selected-name').innerText = this.focused.name;
+        }
+      } else if (this.focused && this.focused == this.selected) {
+        this.focused = null;
+        this.selected.scale.set(1, 1, 1);
+        document.getElementById('selected-name').innerText = '';
+      }
     }
   }
 
@@ -153,12 +220,15 @@ class Collection {
 
   loadModel(path, pos) {
     if (path in this.loaded) {
-      this.setupModel(this.loaded[path].clone(), pos);
+      let model = this.loaded[path].clone();
+      model.name = path;
+      this.setupModel(model, pos);
     } else {
       loader.load(path, (gltf) => {
-        let child = gltf.scene.children[0];
-        this.setupModel(child, pos);
-        this.loaded[path] = child;
+        let model = gltf.scene.children[0];
+        model.name = path;
+        this.setupModel(model, pos);
+        this.loaded[path] = model;
       });
     }
   }
@@ -177,3 +247,4 @@ function render(time) {
   requestAnimationFrame(render);
 }
 render();
+
