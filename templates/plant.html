@@ -2,12 +2,10 @@
 
 {% block content %}
 <div id="plant">
-    <ul class="statuses">
-        <li id="phosphorus"><div class="fill"></div></li>
-        <li id="hydration"><div class="fill"></div></li>
-    </ul>
-    <div id="plant-model" data-model="/static/models/pot.gltf"></div>
+    <div id="plant-model"></div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.js"></script>
+<script src="/static/lib/physijs/physi.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
 {{ javascript_tag('plant_js') | safe }}
 {% endblock %}

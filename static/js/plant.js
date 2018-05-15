@@ -1,144 +1,106 @@
-import * as THREE from 'three';
 import Scene from './scene.js';
 import GLTFLoader from './gltf.js';
 
-const PLANT_SCALE = 50;
+Physijs.scripts.worker = '/static/lib/physijs/physijs_worker.js';
+Physijs.scripts.ammo = '/static/lib/physijs/examples/js/ammo.js';
+
+const OBJ_MASS = 10;
+const OBJ_SCALE = 50;
 const loader = new GLTFLoader();
-const clock = new THREE.Clock();
-const phoshoMeter = document.querySelector('#phosphorus .fill');
-const hydroMeter = document.querySelector('#hydration .fill');
-window.hydroMeter = hydroMeter;
 
-function loadPlant(scene, cb){
-  return (gltf) => {
-    let child = gltf.scene.children[0];
-    let plant = child.children[0];
-    child.scale.set(PLANT_SCALE, PLANT_SCALE, PLANT_SCALE);
-    plant.material.color = {
-      r: 1,
-      g: 1,
-      b: 1
-    };
-    plant.material.side = THREE.DoubleSide;
-    scene.add(child);
-    cb(child, gltf.animations);
-  }
-}
-
-function loadPot(scene, cb){
-  return (gltf) => {
-    let child = gltf.scene.children[0];
-    child.scale.set(PLANT_SCALE, PLANT_SCALE, PLANT_SCALE);
-    child.material.color = {
-      r: 1,
-      g: 1,
-      b: 1
-    };
-    scene.add(child);
-    cb(child);
-  }
-}
-
-class Plant {
-  constructor(modelPath) {
+class Collection {
+  constructor() {
     this.scene = new Scene({
       enableControls: true
     });
-    this.scene.controls.enablePan = false;
+    this.objs = [];
+    this.phys = {};
 
-    this.hydration = 1.0;
-    this.phosphorus = 1.0;
+    let [w, h] = [1000, 2000];
+    let capGeo = new THREE.PlaneGeometry(w, w, 1, 1);
+    let floor = new Physijs.PlaneMesh(capGeo);
+    floor.rotation.set(-Math.PI/2, 0, 0);
+    floor.position.set(0, -h/2, 0);
+    this.scene.add(floor);
 
-    loader.load('/static/models/plant.gltf', loadPlant(this.scene, (obj, animations) => {
-      this.plant = obj.children[0];
-      obj.position.set(0, -60, 0);
-      console.log(animations);
+    let ceil = new Physijs.PlaneMesh(capGeo);
+    ceil.rotation.set(Math.PI/2, 0, 0);
+    ceil.position.set(0, h/2, 0);
+    this.scene.add(ceil);
 
-      // 0 -> happy animation
-      // 1 -> wilt animation
-      // 2 -> idle animation
-      this.animations = animations;
-      this.mixer = new THREE.AnimationMixer(this.plant);
-      this.idle();
-    }));
+    let wallGeo = new THREE.PlaneGeometry(w, h, 1, 1);
+    let wall = new Physijs.PlaneMesh(wallGeo);
+    wall.rotation.set(0, -Math.PI/2, 0);
+    wall.position.set(w/2, 0, 0);
+    this.scene.add(wall);
 
-    loader.load('/static/models/pot.gltf', loadPot(this.scene, (obj) => {
-      obj.position.set(0, -100, 0);
-    }));
+    let lwall = new Physijs.PlaneMesh(wallGeo);
+    lwall.rotation.set(0, Math.PI/2, 0);
+    lwall.position.set(-w/2, 0, 0);
+    this.scene.add(lwall);
+
+    let bwall = new Physijs.PlaneMesh(wallGeo);
+    bwall.rotation.set(0, 0, 0);
+    bwall.position.set(0, 0, -w/2);
+    this.scene.add(bwall);
+
+    let fwall = new Physijs.PlaneMesh(wallGeo);
+    fwall.rotation.set(-Math.PI, 0, 0);
+    fwall.position.set(0, 0, w/2);
+    this.scene.add(fwall);
+
+    this.scene.scene.addEventListener(
+      'update', () => {
+        this.objs.forEach((obj) => {
+          let physbox = this.phys[obj.uuid];
+          obj.position.set(physbox.position.x, physbox.position.y, physbox.position.z);
+          obj.rotation.set(physbox.rotation.x, physbox.rotation.y, physbox.rotation.z);
+        });
+      }
+    );
+
+    this.loadModel('/static/models/plant.gltf', {x: 10, y: 10, z: 10});
+    this.loadModel('/static/models/water_drop.gltf', {x: 20, y: 20, z: 20});
+    this.loadModel('/static/models/beef.gltf', {x: 20, y: 20, z: 20});
   }
 
-  update() {
-    this.hydration -= 0.0005;
-    this.hydration = Math.max(0, this.hydration);
+  loadModel(path, pos) {
+    loader.load(path, (gltf) => {
+      let child = gltf.scene.children[0];
+      child.scale.set(OBJ_SCALE, OBJ_SCALE, OBJ_SCALE);
+      child.children.forEach((c) => {
+        c.material.color = {
+          r: 1,
+          g: 1,
+          b: 1
+        };
+        c.material.side = THREE.DoubleSide;
+      });
+      child.position.set(pos.x, pos.y, pos.z);
+      this.scene.add(child);
 
-    this.phosphorus -= 0.0005;
-    this.phosphorus = Math.max(0, this.phosphorus);
+      // setup physics box
+      let bbox = new THREE.Box3().setFromObject(child);
+      let x = bbox.max.x - bbox.min.x;
+      let y = bbox.max.y - bbox.min.y;
+      let z = bbox.max.z - bbox.min.z;
+      let physbox = new Physijs.BoxMesh(new THREE.BoxGeometry(x, y, z), new THREE.MeshBasicMaterial(), OBJ_MASS);
+      physbox.visible = false;
+      physbox.position.set(pos.x, pos.y, pos.z);
+      this.scene.add(physbox);
 
-    hydroMeter.style.height = `${this.hydration * 100}%`;
-    phoshoMeter.style.height = `${this.phosphorus * 100}%`;
-    if (this.hydration <= 0 || this.phosphorus <= 0) {
-      this.wilt();
-    }
-  }
-
-  idle() {
-    let anim = this.mixer.clipAction(this.animations[2]);
-    anim.play();
-  }
-
-  wilt() {
-    let color = this.plant.material.color;
-    let anim = this.mixer.clipAction(this.animations[1]);
-    anim.clampWhenFinished = true;
-    anim.setLoop(THREE.LoopOnce, 1);
-    anim.play();
-    let colorTween = new TWEEN.Tween(color)
-      .to({r:0.8, g:0.3, b:0.5}, 800)
-      .onUpdate(() => {
-        this.plant.material.color = color;
-      }).start();
-  }
-
-  happy() {
-    let anim = this.mixer.clipAction(this.animations[0]);
-    anim.reset();
-    anim.setLoop(THREE.LoopOnce, 1);
-    let onFinish = (e) => {
-      anim.reset();
-      this.idle();
-      this.mixer.removeEventListener('finished', onFinish);
-    }
-    this.mixer.addEventListener('finished', onFinish)
-    anim.play();
+      this.objs.push(child);
+      this.phys[child.uuid] = physbox;
+    });
   }
 }
 
 let plant_el = document.getElementById('plant-model');
-let plant = new Plant(plant_el.dataset.model);
+let plant = new Collection();
 plant_el.appendChild(plant.scene.renderer.domElement);
 
-plant.scene.renderer.domElement.addEventListener('click', () => {
-  if (plant.hydration > 0) {
-    plant.hydration += 0.1;
-    plant.hydration = Math.min(1.0, plant.hydration);
-    plant.happy();
-  }
-});
-
-// TODO
-function SaveImage() {
-  var image = plant.scene.renderer.domElement.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-  window.location.href = image;
-}
-
 function render(time) {
-  plant.update();
   plant.scene.render();
   requestAnimationFrame(render);
-  var delta = clock.getDelta();
-  if (plant.mixer != null) {
-    plant.mixer.update(delta);
-  };
-  TWEEN.update(time);
 }
 render();
